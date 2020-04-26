@@ -33,43 +33,58 @@ export default {
       let min = now.getMinutes()
       let sec = now.getSeconds()
       this.updateTime(hour, min, sec)
-      this.updateValue()
-    }, 1000)
+      // this.updateValue()
+    }, 1000),
+    this.updateSensor = setInterval(() => {
+      this.axios.post('/data')
+        .then((res) => {
+          // console.log(res.data)
+          this.GauageData[0].Value = res.data.temperature
+          this.GauageData[1].Value = res.data.altitude
+          this.GauageData[2].Value = res.data.light
+          this.GauageData[3].Value = res.data.humidity
+          this.GauageData[4].Value = res.data.UV
+          this.GauageData[5].Value = res.data.pressure
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }, 2000)
   },
   data: function() {
     return {
       GauageData: [
         {
           Title: "Temperture",
-          Value: 26.3,
+          Value: 0,
           Icon: "weather.svg",
           Unit: "ºC",
           bias: [23, 25]
         },
         {
           Title: "Altitude",
-          Value: 1310.6,
+          Value: 0,
           Icon: "mountain.svg",
           Unit: "M",
           bias: [793.4, 795]
         },
-        {
-          Title: "PM2.5",
-          Value: 15.7,
-          Icon: "dust.svg",
-          Unit: "μg/m³",
-          bias: [15.6, 16.4]
-        },
+        // {
+        //   Title: "PM2.5",
+        //   Value: 15.7,
+        //   Icon: "dust.svg",
+        //   Unit: "μg/m³",
+        //   bias: [15.6, 16.4]
+        // },
         {
           Title: "Light",
-          Value: 344,
+          Value: 0,
           Icon: "idea.svg",
           Unit: "cd",
           bias: [340, 350]
         },
         {
           Title: "Hummidity",
-          Value: 73,
+          Value: 0,
           Icon: "drop.svg",
           Unit: "%",
           bias: [66, 72]
@@ -83,7 +98,7 @@ export default {
         },
         {
           Title: "Pressure",
-          Value: 997,
+          Value: 0,
           Icon: "pressure.svg",
           Unit: "hPa",
           bias: [1010, 1013]
@@ -113,9 +128,9 @@ export default {
       if(hour < 10) {
         hour = "0" + hour
       }
-      this.GauageData[7].hour = hour
-      this.GauageData[7].min = min
-      this.GauageData[7].sec = sec
+      this.GauageData[6].hour = hour
+      this.GauageData[6].min = min
+      this.GauageData[6].sec = sec
       return 0
     },
     updateValue: function() {
@@ -133,6 +148,7 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.timer)
+    clearInterval(this.updateSensor)
   }
 };
 </script>
