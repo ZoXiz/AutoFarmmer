@@ -25,5 +25,13 @@ yarn run test
 yarn run lint
 ```
 
+### Run Web server (afert build)
+```
+node ./routes/app.js
+```
+
+### Arduino setting
+baudRate: 115200
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
